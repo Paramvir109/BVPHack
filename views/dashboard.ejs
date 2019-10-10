@@ -6,9 +6,6 @@
             </div>
             <div class="col-md-12 col-12 text-left">
                 <h1>Hi, Manish Sahani</h1>
-                <button class="btn btn--primary type--uppercase" id="find-btn" style="padding: 0 1rem ;">
-                        Call for Service 
-                </button>
             </div>
         </div>
         <!--end of row-->
@@ -19,7 +16,35 @@
 <section>
     <div class="container">
         <div class="row">
-            
+            <div class="col-md-6">
+                    <form class="row" id="find-service"  >
+                            <div class="col-md-12">
+                                <label>What issue are you facing?</label>
+                                <textarea name="text" placeholder="Please describe about the problem you are facing." rows="4"></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="">Nearby Landmark</label>
+                                <input type="text" name="name" placeholder="Nearby Landmark" />
+                            </div>
+                            <div class="col-md-12">
+                                <div class="input-select">
+                                    <select>
+                                        <option selected="" value="Default">Some common issues</option>
+                                        <option value="Small">Small</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Larger">Large</option>
+                                        <option value="Small">Small</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Larger">Large</option>
+                                    </select>
+                                </div>
+                            </div>
+                        
+                            <div class="col-md-4 mt-2">
+                                <button type="submit" class="btn btn--primary">Call for Service</button>
+                            </div>
+                    </form>
+            </div>
         </div>
     </div>    
 </section>
@@ -53,8 +78,8 @@
         console.log('user_connected');
     })
 
-    $('#find-btn').on('click', () => {
-     
+    $('#find-service').on('submit', (e) => {
+        e.preventDefault();
         if(!currLocation) currLocation = { lat: 28.6755389, lng: 77.1129107 };
         console.log('btn clicked')
         console.log(currLocation)
@@ -74,7 +99,7 @@
         });
     })
 </script>
-<!-- 
+
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAymsA8qvSL5wi3_Kmf4ibtJ5OnDwHfjLM&callback=initMap">
-    </script> -->
+    </script>
