@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 var RequestSchema = new mongoose.Schema({
     approval:{
         type: Boolean,
-        required: true
+        required: true,
+        default : false
     },
     problemType : {
         type : String,
@@ -13,7 +14,7 @@ var RequestSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    creator : {
+    _creator : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User',
         required : true
