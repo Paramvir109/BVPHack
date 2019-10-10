@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-const {mongoose} = require('./mongoose')
+const {mongoose} = require('./config/mongoose')
 
 
-app.use('/', require('./routes'));
+app.use('/', require('./config/routes'));
 app.set('view engine', 'ejs');
 
 const port = process.env.PORT || 3000
