@@ -1,4 +1,3 @@
-const path = require('path')
 
 const express = require('express')
 const router = express.Router();
@@ -13,11 +12,9 @@ router.get('/dashboard', (req, res) => {
     res.send('User page');
 })
 
-let publicPath = path.join(__dirname, '..','/public')
 const port = process.env.PORT || 3000
 
 const app = express()
-// app.use(express.static(publicPath))
 app.use('/', router);
 
 
