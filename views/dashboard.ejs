@@ -1,12 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
-</head>
-<body>
-    Dashboard
-</body>
-</html>
+<section class="text-center bg--secondary">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-12 mb-5">
+                <div id="user-map" class="map-container border--round"></div>
+            </div>
+            <div class="col-md-12 col-12 text-left">
+                <h1>Hi, Manish Sahani</h1>
+                <button class="btn" id="find-btn">
+                    <span class="btn__text">
+                        Call for Service 
+                    </span>
+                </button>
+            </div>
+        </div>
+        <!--end of row-->
+    </div>
+    <!--end of container-->
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+<script>
+    var currLocation = {lat: "", lng: ""}
+    function getCurrentPos() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(loadMap);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function initMap() { getCurrentPos() }
+    
+    // Initialize and add the map
+    function loadMap(position) {
+        var currLocation = {lat: position.coords.latitude, lng: position.coords.longitude}
+        var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 19, center: currLocation });
+        var marker = new google.maps.Marker({ position: currLocation, map: map });
+    }
+
+    var socket = io();
+    socket.on('connect', function () {
+        console.log('user_connected');
+    })
+
+    document.getElementById('find-btn').on('click', () => {
+        socket.emit('find-vendors', { id: 100, position: currLocation });
+    })
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAymsA8qvSL5wi3_Kmf4ibtJ5OnDwHfjLM&callback=initMap">
+    </script>
