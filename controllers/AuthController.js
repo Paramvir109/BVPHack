@@ -22,5 +22,13 @@ module.exports = {
         console.log(vendor);
         await vendor.save();
         res.json(vendor);
+    },
+
+    viewSignup: async (req, res) => {
+        res.render('signup');
+    },
+
+    viewLogin: async(req, res) => {
+        res.render('login');
     }
 }
