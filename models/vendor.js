@@ -51,7 +51,7 @@ VendorSchema.methods.toJSON = function() {//Overrided method
 VendorSchema.statics.findByCredentials = async function(email, password) {
     let User = this;
     try {
-        let user = await User.findOne({email})
+        let user = await Vendor.findOne({email})
         let res = await bcrypt.compare(password, user.password)
         if(res) {
             return user

@@ -1,0 +1,22 @@
+<section class="text-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-12 text-left">
+                <h1>All Requests</h1>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    var socket = io();
+    socket.on('connect', function () {
+        socket.emit('get-requests', {}, (res) => {
+            console.log(res);
+        })
+    })
+
+</script>

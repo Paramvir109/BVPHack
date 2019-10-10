@@ -20,15 +20,15 @@ var RequestSchema = new mongoose.Schema({
     }
     
 })
-RequestSchema.statics.findApproved = async function() {
+RequestSchema.statics.findApproved = async function(req, res) {
     let Request = this;
     try {
-        let query = await User.find({approval : true})
+        let query = await Request.find({approval : true})
+        console.log(query); 
         
         if(res) {
             return query
         }
-        throw new Error('No active requests')
     } catch (error) {
         throw new Error(error.message)
     }

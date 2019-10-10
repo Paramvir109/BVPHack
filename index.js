@@ -20,9 +20,15 @@ app.set('server', server);
 
 
 const UserController = require('./controllers/UserController')
+const VendorController = require('./controllers/VendorController')
 
 io.on('connection', (socket) => {
     socket.on('find-vendors', (params,callback) => { UserController.callForService(params, callback) })
+
+    socket.on('get-requests', (params = {},callback) => {
+        console.log('co'); 
+        VendorController.indexRequest(params, callback)
+    })
 })
 
 

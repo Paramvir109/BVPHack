@@ -12,9 +12,7 @@ router.get('/vendor/signup', AuthController.vendorSignup);
 router.get('/dashboard', UserController.index);
 
 
-router.get('/vendor/dashboard', (req, res) => {
-    res.send('Vendor page');
-})
+router.get('/vendor/dashboard', VendorController.index);
 
 module.exports = router;
 

@@ -1,9 +1,10 @@
 const {Request} = require('./../models/request')
+
 module.exports = {
 
     index: async (req, res) => {
         // vendor dashboard rendering 
-        res.send('vendor dashboard');
+        res.render('vendorDashboard')
     },
 
     joinRoom: async (req, res) => {
@@ -27,12 +28,14 @@ module.exports = {
 
     },
 
-    indexRequest: (req, res) => {
-        res.json(Request.findApproved());
+    indexRequest: async (params, callback) => {
+        const list = await Request.findApproved();
+        console.log(list);
+        callback(list);
     },
 
     signup: async (req, res) => {
-        
+
     }
 
 
