@@ -1,3 +1,5 @@
+
+
 <section class="text-center bg--secondary">
     <div class="container">
         <div class="row justify-content-center">
@@ -5,7 +7,7 @@
                 <div id="user-map" class="map-container border--round"></div>
             </div>
             <div class="col-md-12 col-12 text-left">
-                <h1>Hi, Manish Sahani</h1>
+                <h1>Hi, <%= user.name %></h1>
             </div>
         </div>
         <!--end of row-->
@@ -20,15 +22,15 @@
                     <form class="row" id="find-service"  >
                             <div class="col-md-12">
                                 <label>What issue are you facing?</label>
-                                <textarea name="text" placeholder="Please describe about the problem you are facing." rows="4"></textarea>
+                                <textarea id="desc" name="desc" placeholder="Please describe about the problem you are facing." rows="4" required></textarea>
                             </div>
                             <div class="col-md-12">
                                 <label for="">Nearby Landmark</label>
-                                <input type="text" name="name" placeholder="Nearby Landmark" />
+                                <input id="nearby" type="text" name="nearby" placeholder="Nearby Landmark" required/>
                             </div>
                             <div class="col-md-12">
                                 <div class="input-select">
-                                    <select>
+                                    <select name="issues">
                                         <option selected="" value="Default">Some common issues</option>
                                         <option value="Small">Small</option>
                                         <option value="Medium">Medium</option>
@@ -39,14 +41,63 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <input type="hidden" name="userid" id="userid" value="<%= user._id %>">
+                            </div>
                         
                             <div class="col-md-4 mt-2">
                                 <button type="submit" class="btn btn--primary">Call for Service</button>
                             </div>
                     </form>
             </div>
+            <div class="col-md-6">
+                    <div class="boxed boxed--border mb-md-0 hidden">
+                            <h5>ICO Ends in:</h5>
+                            <span class="countdown h1" data-date="10/13/2018"></span>
+                            <div class="progress-horizontal">
+                                <div class="progress-horizontal__bar" data-value="50"></div>
+                            </div>
+                            <div>
+                                <p>
+                                    Participate in the StackCoin Sale (all unsold STC token supply burned after token sale ends).
+                                </p>
+                            </div>
+                        </div>
+            </div>
         </div>
     </div>    
+</section>
+
+<section class="h-100 hidden" id="model-loader">
+    <div class="loader loader--style6" title="5">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <rect x="0" y="13" width="4" height="5" fill="#333">
+                <animate attributeName="height" attributeType="XML"
+                    values="5;21;5" 
+                    begin="0s" dur="0.6s" repeatCount="indefinite" />
+                <animate attributeName="y" attributeType="XML"
+                    values="13; 5; 13"
+                    begin="0s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="10" y="13" width="4" height="5" fill="#333">
+                <animate attributeName="height" attributeType="XML"
+                    values="5;21;5" 
+                    begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                <animate attributeName="y" attributeType="XML"
+                    values="13; 5; 13"
+                    begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="20" y="13" width="4" height="5" fill="#333">
+                <animate attributeName="height" attributeType="XML"
+                    values="5;21;5" 
+                    begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                <animate attributeName="y" attributeType="XML"
+                    values="13; 5; 13"
+                    begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+            </svg>     
+    </div>
 </section>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -65,7 +116,7 @@
     
     // Initialize and add the map
     function loadMap(position) {
-        var pos = {lat: position.coords.latitude, lng: position.coords.longitude};
+        var pos = {lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)};
         currLocation = pos
         console.log('Map Loading');
         var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 19, center: currLocation });
@@ -83,19 +134,39 @@
         if(!currLocation) currLocation = { lat: 28.6755389, lng: 77.1129107 };
         console.log('btn clicked')
         console.log(currLocation)
-        socket.emit('find-vendors', { id: 100, place: "Delhi", position: currLocation }, (res) => {
+
+        $( "#model-loader" ).removeClass( 'hidden' );
+
+        $(document.body).css({ 'cursor': 'not-allowed' })
+
+        var data = {
+            id: $('#userid').val(),
+            problem_type: $('#desc').val(),
+            nearby: $('#nearby').val(),
+            coords: currLocation,
+            location: 'Delhi'
+
+        }
+
+        console.log(data);
+
+        socket.emit('find-vendors', data, (res) => {
             var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 12, center: currLocation });
             var marker = new google.maps.Marker({ position: currLocation, map: map });
             console.log(res);
-            res.forEach(item => {
-                var marker = new google.maps.Marker({
-                    position: item.coords, 
-                    map: map,
-                    icon: {
-                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                    }
-                })
-            });
+            if(res) {   
+                res.forEach(item => {
+                    var marker = new google.maps.Marker({
+                        position: item.coords, 
+                        map: map,
+                        icon: {
+                            url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                        }
+                    })
+                });
+
+            }
+            
         });
     })
 </script>

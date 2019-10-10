@@ -87,7 +87,10 @@ VendorSchema.statics.findByToken =  function(token) {
 
 
 VendorSchema.statics.getListByPlace =  async (place) => {
-    return Vendor.find({"place":place})
+
+    let list = await Vendor.find({"place":place})
+
+    return list;
 }
 
 

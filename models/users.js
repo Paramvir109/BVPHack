@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken')
 
 
 var UserSchema = new mongoose.Schema({
+    name: {
+        type: String, 
+        required: true
+    },
+    
     email : {
         type : String,
         required : true,
@@ -69,6 +74,20 @@ UserSchema.statics.findByToken =  function(token) {
     })
 
 }
+
+UserSchema.statics.findByEmail =  async function(id) {
+    let User = this;
+
+    try {
+        let user = await User.findOne({email: id})
+        return user
+    } catch (error) {
+        return Promise.reject();
+    }
+    
+
+}
+
 
 
 UserSchema.pre('save', function(next) {//mongoose middleware

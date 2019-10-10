@@ -1,26 +1,31 @@
 const {User} = require('../models/users')
 const {Vendor} = require('../models/vendor')
 const {Request} = require('../models/request')
+const {ObjectId} = require('mongodb')
 
 module.exports = {
     index: async (req, res) => {
-        res.render('dashboard');
+        const user_email = req.session.user.email
+        let user = await User.findByEmail(user_email);
+        res.render('dashboard', {user: user});
     },
 
-    callForService: async (params, callback) => {
-        // crate a request in db
+    createRequest: async (params) => {
         const request = new Request({
             problemType : params.problem_type,
+            nearby: params.nearby,
             location : params.location,
-            _creator : params.u_id
+            coords: params.coords,
+            _creator : ObjectId(params.id)
         })
         await request.save()
+        return request;
+    },
 
-        // send this request to vendors 
-
-        // return a list of vendors 
-        let list = await Vendor.getListByPlace(params.place);
-        console.log(list);
-        callback(list)
+    getListOfVendors: async (params) => {
+        let list = await Vendor.getListByPlace(params);
+        return list;
     }
+
+
 }

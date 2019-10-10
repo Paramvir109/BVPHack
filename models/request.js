@@ -10,6 +10,10 @@ var RequestSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    nearby: {
+        type: String,
+        required: true
+    },
     location : {
         type : String,
         required : true
@@ -18,16 +22,25 @@ var RequestSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User',
         required : true
+    },
+    coords: {
+        lat: {
+            type: Number,
+            required: true
+        },
+        lng: {
+            type: Number
+        }
     }
     
 })
-RequestSchema.statics.findApproved = async function(req, res) {
+RequestSchema.statics.findUnApproved = async function(req, res) {
     let Request = this;
     try {
-        let query = await Request.find({approval : true})
-        console.log(query); 
+        let query = await Request.find({approval : false})
+
         
-        if(res) {
+        if(query) {
             return query
         }
     } catch (error) {

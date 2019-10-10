@@ -9,13 +9,69 @@
     </div>
 </section>
 
+<section>
+    <div class="container">
+        <div class="row" id="list-view">
+                
+        </div>
+    </div>
+</section>
+
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
     var socket = io();
     socket.on('connect', function () {
+        console.log('vendor connected');
+
+        socket.emit('join-room', {room: 'Delhi'}, (res) => {
+            console.log('join room');
+        })
+
+        socket.on('send-request', (params) => {
+
+            var element = `<div class="col-md-6 " style="margin-botton: 1rem;">
+                                    <div class="boxed boxed--border" >
+                                     <span class="h1 text-dark">
+                                        <strong>Location</strong>  ${params.problemType}  </span>
+                                        <span class="text-danger">Open</span>
+                                        <div style="margin: 1rem 0;"><button class="btn" style="padding: 0 1rem;">Respond</button></div>
+                                        <div>
+                                            <p>
+                                                ${params.location}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>      
+                                        
+                                `
+
+            $('#list-view').append(element)
+        })
+
+
         socket.emit('get-requests', {}, (res) => {
-            console.log(res);
+            res.forEach(element => {
+                let approval = element.approval
+
+                var element = `<div class="col-md-6 ">
+                                    <div class="boxed boxed--border" style="margin-botton: 1rem;">
+                                     <span class="h1 text-dark">
+                                         ${element.problemType} </span>
+                                        <span class="text-danger">Open</span>
+                                        <div style="margin: 1rem 0;"><button class="btn" style="padding: 0 1rem;">Respond</button></div>
+                                        <div>
+                                            <p>
+                                                <strong>Location</strong> ${element.location} 
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>      
+                                        
+                                `
+
+                $('#list-view').append(element)
+            });
         })
     })
 
