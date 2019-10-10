@@ -7,8 +7,6 @@ module.exports = {
     },
 
     joinRoom: async (req, res) => {
-        // room join 
-        //const room = req.city;
         const io = req.app.get('io');
         io.on('connection', (socket) => {
             socket.on('joinVendorRoom', (params,callback) => {
@@ -31,6 +29,10 @@ module.exports = {
 
     indexRequest: (req, res) => {
         res.json(Request.findApproved());
+    },
+
+    signup: async (req, res) => {
+        
     }
 
 

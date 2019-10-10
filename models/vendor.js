@@ -22,13 +22,28 @@ var VendorSchema = new mongoose.Schema({
         required : true,
         minlength : 6,
 
+    },
+    place: {
+        type: String,
+        required: true
+    },
+
+    coords: {
+        lat: {
+            type: Number,
+            required: true
+        },
+        lng: {
+            type: Number
+        }
     }
+    
     
 })
 
 VendorSchema.methods.toJSON = function() {//Overrided method
     let userObject = this.toObject()
-    return _.pick(userObject, ['email' , '_id'])//Only these props sent back
+    return _.pick(userObject, ['email', 'place', 'coords' , '_id'])//Only these props sent back
 }
 
 
@@ -71,6 +86,13 @@ VendorSchema.statics.findByToken =  function(token) {
 }
 
 
+VendorSchema.statics.getListByPlace =  async (place) => {
+    return Vendor.find({"place":place})
+}
+
+
+
+
 VendorSchema.pre('save', function(next) {//mongoose middleware
     var user = this//To get current instance 
     if(user.isModified('password')) {
@@ -84,6 +106,6 @@ VendorSchema.pre('save', function(next) {//mongoose middleware
         next();
     }
 })
-var Vendor = mongoose.model('User', VendorSchema)
+var Vendor = mongoose.model('Vendor', VendorSchema)
 module.exports = {Vendor}
 
