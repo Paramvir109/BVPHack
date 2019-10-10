@@ -84,6 +84,6 @@ VendorSchema.pre('save', function(next) {//mongoose middleware
         next();
     }
 })
-var User = mongoose.model('User', UserSchema)
-module.exports = {User}
+var Vendor = mongoose.model('User', VendorSchema)
+module.exports = {Vendor}
 
