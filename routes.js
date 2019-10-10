@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router();
 
-router.get('/', (rqe,res) => {
-    res.send('HI');
-})
+const PagesController = require('./controllers/PagesController')
+
+router.get('/', PagesController.index);
+
 router.get('/vendor/dashboard', (req, res) => {
     res.send('Vendor page');
 })
