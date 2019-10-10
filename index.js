@@ -1,15 +1,18 @@
 const express = require('express')
 const app = express()
 const {mongoose} = require('./config/mongoose')
-
-
-app.use('/', require('./config/routes'));
-app.set('view engine', 'ejs');
+var expressLayouts = require('express-ejs-layouts');
 
 const port = process.env.PORT || 3000
 
+app.use(expressLayouts);
+app.use('/', require('./config/routes'));
+app.use(express.static('public'));
 
-app.listen(port, () => {
-    console.log(`Server is up and running on ${port}`)
-})
+
+app.set('view engine', 'ejs');
+
+
+
+app.listen(port, () => { console.log(`Server is up and running on ${port}`)})
 
