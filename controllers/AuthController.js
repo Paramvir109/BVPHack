@@ -5,11 +5,25 @@ const {Vendor} = require('../models/vendor')
 module.exports = {
     signup: async (req, res) => {
         const user = new User({
-            email : 'paramvirlod1ajs09@gmail.com',
-            password: '12344324'
+            email : req.body.email,
+            password: req.body.password
         });
         await user.save();
-        res.json(user);
+        res.redirect('/login');
+    },
+    login : async(req,res) => {
+        if(isValidString(req.body.email) && isValidString(req.body.password)) {
+            try {
+                let user = await User.findByCredentials(req.body.email, req.body.password)
+                if(user) {
+                    let token = await user.generateAuthToken()
+                    res.send(token);                    
+                }
+            } catch (error) {
+                return res.send(error.message)
+            }        
+        }
+        return callback('Enter valid id and password')
     },
 
     vendorSignup: async (req, res) => {
@@ -31,4 +45,8 @@ module.exports = {
     viewLogin: async(req, res) => {
         res.render('login');
     }
+}
+
+let  isValidString = (str) => {
+    return (typeof str === 'string') && (str.trim().length > 0)
 }
