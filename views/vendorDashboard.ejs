@@ -21,6 +21,15 @@
 
 <script>
     var socket = io();
+
+    const approve = (id) => {
+        console.log('btn called')
+        console.log(id);
+        socket.emit('request-apporved', id, (res) => {
+            console.log(res);
+        })
+    }
+
     socket.on('connect', function () {
         console.log('vendor connected');
 
@@ -28,17 +37,19 @@
             console.log('join room');
         })
 
+
+
         socket.on('send-request', (params) => {
 
             var element = `<div class="col-md-6 " style="margin-botton: 1rem;">
                                     <div class="boxed boxed--border" >
                                      <span class="h1 text-dark">
-                                        <strong>Location</strong>  ${params.problemType}  </span>
+                                         ${params.problemType}  </span>
                                         <span class="text-danger">Open</span>
-                                        <div style="margin: 1rem 0;"><button class="btn" style="padding: 0 1rem;">Respond</button></div>
+                                        <div style="margin: 1rem 0;"><button onclick="approve('${params._creator}')" class="btn" style="padding: 0 1rem;">Respond</button></div>
                                         <div>
                                             <p>
-                                                ${params.location}
+                                                <strong>Location</strong>  ${params.location}
                                             </p>
                                         </div>
                                     </div>
@@ -53,13 +64,12 @@
         socket.emit('get-requests', {}, (res) => {
             res.forEach(element => {
                 let approval = element.approval
-
                 var element = `<div class="col-md-6 ">
                                     <div class="boxed boxed--border" style="margin-botton: 1rem;">
                                      <span class="h1 text-dark">
                                          ${element.problemType} </span>
                                         <span class="text-danger">Open</span>
-                                        <div style="margin: 1rem 0;"><button class="btn" style="padding: 0 1rem;">Respond</button></div>
+                                        <div style="margin: 1rem 0;"><button onclick="approve('${element._creator}')" class="btn" style="padding: 0 1rem;">Respond</button></div>
                                         <div>
                                             <p>
                                                 <strong>Location</strong> ${element.location} 

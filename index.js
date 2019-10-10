@@ -90,18 +90,20 @@ io.on('connection', (socket) => {
         let request = await UserController.createRequest(params) 
 
         let list = await UserController.getListOfVendors(room);
-        console.log('socket id');
-        console.log(socket.id);
+
+        socket.join(params.id);
+
+
 
         io.to(room).emit('send-request', request);
 
         callback(list);
 
-    })
+    });
 
     socket.on('get-requests', (params = {},callback) => {
         VendorController.indexRequest(params, callback)
-    })
+    });
 
     socket.on('join-room', (params,callback) => {
         if(params.room) {
@@ -114,7 +116,12 @@ io.on('connection', (socket) => {
         else {
             callback('Name and roomname are required')
         }
-    })
+    });
+
+    socket.on('request-apporved', (params, callback) => {
+
+        io.to(params).emit('vendor-found', params);
+    });
 })
 
 

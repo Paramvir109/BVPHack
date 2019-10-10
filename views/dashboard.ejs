@@ -51,15 +51,17 @@
                     </form>
             </div>
             <div class="col-md-6">
-                    <div class="boxed boxed--border mb-md-0 hidden">
-                            <h5>ICO Ends in:</h5>
+                    <div class="boxed boxed--border mb-md-0 " id="status">
+                            <h2>{this} is your Mechanic</h2>
                             <span class="countdown h1" data-date="10/13/2018"></span>
                             <div class="progress-horizontal">
                                 <div class="progress-horizontal__bar" data-value="50"></div>
                             </div>
                             <div>
                                 <p>
-                                    Participate in the StackCoin Sale (all unsold STC token supply burned after token sale ends).
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                    Voluptate rem quasi aut, molestiae officiis veniam culpa tempora sequi, 
+                                    esse accusantium adipisci at aliquam laudantium ipsum? Voluptas nam tenetur alias natus.
                                 </p>
                             </div>
                         </div>
@@ -127,6 +129,15 @@
 
     socket.on('connect', function () {
         console.log('user_connected');
+    })
+
+
+    socket.on('vendor-found', (params, callback) => {
+        $( "#model-loader" ).addClass( 'hidden' );
+        $(document.body).css({ 'cursor': 'default' })
+        $('#find-service').addClass('hidden');
+        $('#status').removeClass('hidden');
+        console.log('Cools');
     })
 
     $('#find-service').on('submit', (e) => {
