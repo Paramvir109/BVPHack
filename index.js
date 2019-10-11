@@ -14,6 +14,8 @@ const UserController = require('./controllers/UserController')
 const VendorController = require('./controllers/VendorController')
 
 const { Request } = require('./models/request');
+const {ObjectId} = require('mongodb')
+
 
 // 
 const bodyParser = require('body-parser');
@@ -121,10 +123,10 @@ io.on('connection', (socket) => {
 
     socket.on('request-apporved', async  (params, callback) => {
         console.log(params.request_id);
+
         const vendor = await VendorController.findById(params.vendor_id);
-        const request = await Request.findById(params.request_id);
-        console.log(request);
-        //await request.approve();
+        // const request = await Request.findById(params.request_id);
+
 
         io.to(params.request_id).emit('vendor-found', vendor);
     });
