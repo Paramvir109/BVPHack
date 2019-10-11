@@ -52,10 +52,13 @@
             </div>
             <div class="col-md-6">
                 <div class="boxed boxed--border mb-md-0 hidden" id="status">
-                    <h2>{this} is your Mechanic</h2>
+                    <h2><span id="vendor-name"></span> is your Mechanic</h2>
                     <span class="countdown h1" data-date="10/13/2018"></span>
                     <div class="progress-horizontal">
-                        <div class="progress-horizontal__bar" data-value="50"></div>
+                        <div class="progress-horizontal__bar" data-value="10"></div>
+                    </div>
+                    <div>
+                        <strong>Status</strong> <span id="request-status">Your Request is approved.</span>
                     </div>
                     <div>
                         <p>
@@ -106,6 +109,29 @@
 
 <script>
     var currLocation;
+    var socket = io();
+
+    socket.on('connect', function () {
+        console.log('user_connected');
+    })
+
+
+    
+
+    // var directionsService;
+    // var directionsRenderer;
+    
+    // Initialize and add the map
+    function loadMap(position) {
+        var pos = {lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)};
+        currLocation = pos
+        console.log('Map Loading');
+        
+        var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 19, center: currLocation });
+        var marker = new google.maps.Marker({ position: currLocation, map: map });
+        
+    }
+
     function getCurrentPos() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(loadMap);
@@ -115,21 +141,19 @@
     }
 
     function initMap() { getCurrentPos() }
-    
-    // Initialize and add the map
-    function loadMap(position) {
-        var pos = {lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)};
-        currLocation = pos
-        console.log('Map Loading');
-        var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 19, center: currLocation });
-        var marker = new google.maps.Marker({ position: currLocation, map: map });
-    }
 
-    var socket = io();
 
-    socket.on('connect', function () {
-        console.log('user_connected');
-    })
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, source, dest) {
+        const request = {
+              origin: source,
+              destination: dest,
+              travelMode: 'DRIVING'
+            }
+        directionsService.route(request, (result, status) => {
+            console.log(result);
+            directionsDisplay.setDirections(result);
+        }); 
+      }
 
 
     socket.on('vendor-found', (params, callback) => {
@@ -137,7 +161,26 @@
         $(document.body).css({ 'cursor': 'default' })
         $('#find-service').addClass('hidden');
         $('#status').removeClass('hidden');
-        console.log('Cools');
+        console.log(params);
+        $('#vendor-name').text(params.name);
+        const vendorCoords = params.coords;
+        const source = new google.maps.LatLng(vendorCoords.lat, vendorCoords.lng);
+        const dest = new google.maps.LatLng(currLocation.lat, currLocation.lng);
+        const mapOptions = {
+            zoom : 14,
+            center : source
+
+        }
+        const directionsService = new google.maps.DirectionsService();
+        const directionsDisplay= new google.maps.DirectionsRenderer();
+        const map = new google.maps.Map(document.getElementById('user-map'), mapOptions);
+        directionsDisplay.setMap(map);
+
+
+
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay, source, dest);
+        
     })
 
     $('#find-service').on('submit', (e) => {
@@ -155,26 +198,26 @@
             problem_type: $('#desc').val(),
             nearby: $('#nearby').val(),
             coords: currLocation,
-            location: 'Delhi'
+            location: 'delhi'
 
         }
 
         console.log(data);
 
         socket.emit('find-vendors', data, (res) => {
-            var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 12, center: currLocation });
-            var marker = new google.maps.Marker({ position: currLocation, map: map });
+            // var map = new google.maps.Map(document.getElementById('user-map'), { zoom: 12, center: currLocation });
+            // var marker = new google.maps.Marker({ position: currLocation, map: map });
             console.log(res);
             if(res) {   
-                res.forEach(item => {
-                    var marker = new google.maps.Marker({
-                        position: item.coords, 
-                        map: map,
-                        icon: {
-                            url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                        }
-                    })
-                });
+                // res.forEach(item => {
+                //     var marker = new google.maps.Marker({
+                //         position: item.coords, 
+                //         map: map,
+                //         icon: {
+                //             url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                //         }
+                //     })
+                // });
 
             }
             

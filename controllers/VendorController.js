@@ -1,4 +1,7 @@
 const {Request} = require('./../models/request')
+const {Vendor} = require('./../models/vendor');
+
+const {ObjectId} = require('mongodb');
 
 module.exports = {
 
@@ -22,6 +25,11 @@ module.exports = {
 
     signup: async (req, res) => {
 
+    },
+
+    findById: async (id) => {
+        const result = await Vendor.findById(ObjectId(id))
+        return result;
     }
 
 

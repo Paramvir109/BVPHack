@@ -1,5 +1,6 @@
 const {User} = require('../models/users')
 const {Vendor} = require('../models/vendor')
+const { ObjectId } = require('mongodb')
 
 
 module.exports = {
@@ -39,10 +40,11 @@ module.exports = {
 
     vendorSignup: async (sreq, res) => {
         const vendor = new Vendor({
-            email : 'manishnahssmanishakjnsjssskjjn@gmail.com',
+            name: 'Kunal sinha',
+            email : 'Kunal@gmail.com',
             password: '12344324',
-            place: 'Delhi',
-            coords: { lat: 28.6863898, lng:77.1421264 }
+            place: 'delhi',
+            coords: { lat: 28.6873898, lng:77.1431264 }
         });
         await vendor.save();
         res.json(vendor);
@@ -54,6 +56,15 @@ module.exports = {
 
     viewLogin: async(req, res) => {
         res.render('login');
+    }, 
+
+    logout: async (req, res) => {
+        if (req.session.user && req.cookies.user_sid) {
+            res.clearCookie('user_sid');
+            res.redirect('/');
+        } else {
+            res.redirect('/login');
+        }
     }
 }
 

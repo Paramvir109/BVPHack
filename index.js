@@ -13,6 +13,7 @@ const AuthController = require('./controllers/AuthController')
 const UserController = require('./controllers/UserController')
 const VendorController = require('./controllers/VendorController')
 
+const { Request } = require('./models/request');
 
 // 
 const bodyParser = require('body-parser');
@@ -72,7 +73,7 @@ app.get('/dashboard', isAuth, UserController.index);
 
 app.get('/vendor/dashboard', VendorController.index);
 
-
+app.get('/logout', AuthController.logout);
 
 
 app.set('io', io);
@@ -118,9 +119,14 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('request-apporved', (params, callback) => {
+    socket.on('request-apporved', async  (params, callback) => {
+        console.log(params.request_id);
+        const vendor = await VendorController.findById(params.vendor_id);
+        const request = await Request.findById(params.request_id);
+        console.log(request);
+        //await request.approve();
 
-        io.to(params).emit('vendor-found', params);
+        io.to(params.request_id).emit('vendor-found', vendor);
     });
 })
 

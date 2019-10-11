@@ -20,20 +20,33 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
+
     var socket = io();
 
+    const vendor = {
+        "_id" : "5d9fdaa095796b2bc9a7a723",
+        "name" : "Kunal sinha",
+        "email" : "Kunal@gmail.com",
+        "place" : "delhi",
+        "coords" : {
+            "lat" : 28.6873898,
+            "lng" : 77.1431264
+        },
+        "__v" : 0
+    }
+
     const approve = (id) => {
-        console.log('btn called')
-        console.log(id);
-        socket.emit('request-apporved', id, (res) => {
+        socket.emit('request-apporved', {request_id: id, vendor_id: vendor._id}, (res) => {
             console.log(res);
         })
     }
 
+
+
     socket.on('connect', function () {
         console.log('vendor connected');
 
-        socket.emit('join-room', {room: 'Delhi'}, (res) => {
+        socket.emit('join-room', {room: 'delhi'}, (res) => {
             console.log('join room');
         })
 
@@ -83,6 +96,10 @@
                 $('#list-view').append(element)
             });
         })
+    })
+
+    socket.on('disconnect', () => {
+        $('#list-view').html('')
     })
 
 </script>

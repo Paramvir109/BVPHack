@@ -6,6 +6,10 @@ const jwt = require('jsonwebtoken')
 
 
 var VendorSchema = new mongoose.Schema({
+    name: {
+        type: String, 
+        required: true
+    },
     email : {
         type : String,
         required : true,
@@ -43,7 +47,7 @@ var VendorSchema = new mongoose.Schema({
 
 VendorSchema.methods.toJSON = function() {//Overrided method
     let userObject = this.toObject()
-    return _.pick(userObject, ['email', 'place', 'coords' , '_id'])//Only these props sent back
+    return _.pick(userObject, ['name', 'email', 'place', 'coords' , '_id'])//Only these props sent back
 }
 
 
@@ -82,6 +86,19 @@ VendorSchema.statics.findByToken =  function(token) {
     return User.findOne({
         '_id' : decoded._id,
     })
+
+}
+
+VendorSchema.statics.findById =  async function(id) {
+    let User = this;
+
+    try {
+        let user = await Vendor.findOne({_id: id})
+        return user
+    } catch (error) {
+        return Promise.reject();
+    }
+    
 
 }
 
